@@ -26,6 +26,8 @@ public struct Specification {
   }
 
   public func roll() -> Int {
-    1
+    self.entries.reduce(into: 0) { result, die in
+      result += die.roll()
+    }
   }
 }
