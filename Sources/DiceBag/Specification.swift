@@ -1,8 +1,22 @@
 public struct Specification {
   enum Entry {
-    case die(_ die: Die)
+    case die(_ count: Int, die: Die)
     case constant(_ constant: Int)
-    case multiplier(_ multiplier: Int, die: Die)
+
+    func roll() -> Int {
+      switch self {
+      case let .die(count, die):
+        var result = 0
+
+        for _ in 1...count {
+          result += die.roll()
+        }
+
+        return result
+      case let .constant(constant):
+        return constant
+      }
+    }
   }
 
   let entries: [Entry]
