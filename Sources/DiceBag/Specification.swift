@@ -1,5 +1,5 @@
-public struct Specification {
-  enum Entry {
+public struct Specification: Equatable {
+  enum Entry: Equatable {
     case die(_ count: Int, die: Die)
     case constant(_ constant: Int)
 
@@ -17,12 +17,28 @@ public struct Specification {
         return constant
       }
     }
+
+    init?(_ specification: String) {
+      if let constant = Int(specification) {
+        self = .constant(constant)
+      } else {
+        self = .die(1, die: Die(d: 6))
+      }
+    }
   }
 
   let entries: [Entry]
 
   public init?(_ specification: String) {
+    let trimmedSpecification = specification.filter { character in
+      !character.isWhitespace
+    }
+
     self.entries = []
+  }
+
+  init(_ entries: Entry...) {
+    self.entries = entries
   }
 
   public func roll() -> Int {
@@ -30,4 +46,12 @@ public struct Specification {
       result += die.roll()
     }
   }
+}
+
+func * (count: Int, die: Die) -> Specification.Entry {
+  .die(count, die: die)
+}
+
+prefix func + (constant: Int) -> Specification.Entry {
+  .constant(constant)
 }

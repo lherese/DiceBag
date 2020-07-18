@@ -1,4 +1,4 @@
-public struct Die {
+public struct Die: Equatable {
 
   let sides: Int
 
