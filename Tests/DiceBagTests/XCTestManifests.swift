@@ -6,6 +6,7 @@ extension DiceTests {
     //   `swift test --generate-linuxmain`
     // to regenerate.
     static let __allTests__DiceTests = [
+        ("testRollCount", testRollCount),
         ("testSpecification", testSpecification),
     ]
 }

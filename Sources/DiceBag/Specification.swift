@@ -6,10 +6,10 @@ public struct Specification: Equatable {
     case constant(_ constant: Int)
     case multiplier(_ multiplier: Entry, _ entry: Entry)
 
-    func roll() -> Int {
+    func roll() -> Die.Roll {
       switch self {
       case let .die(count, die):
-        var result = 0
+        var result = Die.Roll()
 
         for _ in 1...count {
           result += die.roll()
@@ -17,10 +17,14 @@ public struct Specification: Equatable {
 
         return result
       case let .constant(constant):
-        return constant
+        return Die.Roll(values: [constant])
       case let .multiplier(multiplier, entry):
-        return multiplier.roll() * entry.roll()
+        return entry.roll() * multiplier.roll()
       }
+    }
+
+    func roll() -> Int {
+      roll().total
     }
 
     init?(_ specification: Substring) {
@@ -90,10 +94,16 @@ public struct Specification: Equatable {
     self.init(entries: entries)
   }
 
+  func roll() -> Die.Roll {
+    self
+      .entries
+      .reduce(into: Die.Roll()) { result, entry in
+        result += entry.roll()
+      }
+  }
+
   public func roll() -> Int {
-    self.entries.reduce(into: 0) { result, die in
-      result += die.roll()
-    }
+    roll().total
   }
 }
 
