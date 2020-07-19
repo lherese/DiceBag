@@ -14,6 +14,7 @@ final class DiceTests: XCTestCase {
     XCTAssertEqual(Specification("3d6 * 2"), Specification(.multiplier(3 * Die(d: 6), +2)))
     XCTAssertEqual(Specification("d%"), Specification(1 * Die(d: 100)))
     XCTAssertEqual(Specification("2d6k1"), Specification(Specification.Entry.die(2, die: Die(d: 6), keep: 1)))
+    XCTAssertEqual(Specification("2d6k2"), nil)
     XCTAssertEqual(Specification("2d6k3"), nil)
   }
 
