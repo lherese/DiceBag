@@ -73,6 +73,10 @@ public struct Specification: Equatable {
   public init?(_ specification: String) {
     let entries = specification
       .filter { !$0.isWhitespace }
+      .replacingOccurrences(of: "D", with: "d")
+      .replacingOccurrences(of: "%", with: "100")
+      .replacingOccurrences(of: "+d", with: "Ad")
+      .replacingOccurrences(of: "-d", with: "Dd")
       .replacingOccurrences(of: "-", with: "+-")
       .split(separator: "+")
       .map { Entry($0) }
