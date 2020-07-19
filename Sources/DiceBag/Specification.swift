@@ -2,18 +2,26 @@ import Foundation
 
 public struct Specification: Equatable {
   indirect enum Entry: Equatable {
-    case die(_ count: Int, die: Die)
+    case die(_ count: Int, die: Die, keep: Int? = nil)
     case constant(_ constant: Int)
     case multiplier(_ multiplier: Entry, _ entry: Entry)
 
     func roll() -> Die.Roll {
       switch self {
-      case let .die(count, die):
+      case let .die(count, die, keep):
         var result = Die.Roll()
 
         for _ in 1...count {
           result += die.roll()
         }
+
+        guard
+          let keptRoll = result.keep(count: keep)
+        else {
+          preconditionFailure("Invalid specification rolled.")
+        }
+
+        result = keptRoll
 
         return result
       case let .constant(constant):
@@ -50,14 +58,27 @@ public struct Specification: Equatable {
         let elements = specification
           .split(separator: "d", maxSplits: 1, omittingEmptySubsequences: false)
 
+        let keepElements = elements
+          .last!
+          .split(separator: "k", maxSplits: 1)
+
         guard
           let count = (elements.first! == "" ? 1 : Int(elements.first!)),
-          let die = Int(elements.last!)
+          let die = Int(keepElements.first!)
         else {
           return nil
         }
 
-        self = .die(count, die: Die(d: die))
+        let keep = (keepElements.count == 2 ? Int(keepElements.last!) : nil)
+
+        guard
+          count > 0,
+          keep == nil || count > keep!
+        else {
+          return nil
+        }
+
+        self = .die(count, die: Die(d: die), keep: keep)
       } else {
         return nil
       }

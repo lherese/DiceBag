@@ -13,15 +13,18 @@ final class DiceTests: XCTestCase {
     XCTAssertEqual(Specification("3d6 - 2"), Specification(3 * Die(d: 6), +(-2)))
     XCTAssertEqual(Specification("3d6 * 2"), Specification(.multiplier(3 * Die(d: 6), +2)))
     XCTAssertEqual(Specification("d%"), Specification(1 * Die(d: 100)))
+    XCTAssertEqual(Specification("2d6k1"), Specification(Specification.Entry.die(2, die: Die(d: 6), keep: 1)))
+    XCTAssertEqual(Specification("2d6k3"), nil)
   }
 
   func testRollCount() {
-    XCTAssertEqual(Specification("d6")!.roll().values.count, 1)
-    XCTAssertEqual(Specification("3d6")!.roll().values.count, 3)
-    XCTAssertEqual(Specification("2d6 + 3")!.roll().values.count, 3)
-    XCTAssertEqual(Specification("2d6 * 2")!.roll().values.count, 2)
-    XCTAssertEqual(Specification("2 * 2d6")!.roll().values.count, 2)
-    XCTAssertEqual(Specification("2d6 * 2d6")!.roll().values.count, 2)
+    XCTAssertEqual(Specification("d6")?.roll().values.count, 1)
+    XCTAssertEqual(Specification("3d6")?.roll().values.count, 3)
+    XCTAssertEqual(Specification("2d6 + 3")?.roll().values.count, 3)
+    XCTAssertEqual(Specification("2d6 * 2")?.roll().values.count, 2)
+    XCTAssertEqual(Specification("2 * 2d6")?.roll().values.count, 2)
+    XCTAssertEqual(Specification("2d6 * 2d6")?.roll().values.count, 2)
+    XCTAssertEqual(Specification("4d6k3")?.roll().values.count, 3)
   }
 
 }

@@ -30,6 +30,27 @@ public struct Die: Equatable {
 
       return Roll(values: values)
     }
+
+    mutating func keep(count: Int?) -> Roll? {
+      guard
+        let count = count
+      else {
+        return self
+      }
+
+      guard
+        count < values.count
+      else {
+        return nil
+      }
+
+      values
+        .sort(by: >)
+
+      values = Array(values[0..<count])
+
+      return self
+    }
   }
 
   let sides: Int
